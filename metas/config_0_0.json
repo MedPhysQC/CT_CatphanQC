@@ -1,0 +1,117 @@
+{
+    "comments": {
+        "author": "Dennis Dickerscheid, ASZ",
+        "creator": "generate_config_json.py version 20161110",
+        "description": "CT Catphan"
+    },
+    "results": {
+        "AcquisitionDateTime": {
+            "constraint_period": 14,
+            "description": "date and time of acquisition",
+            "display_level": 2,
+            "display_name": "DateTime",
+            "units": ""
+        },
+	"Slice Thickness Passed": {
+            "constraint_equals": "True",
+            "display_level": 2
+        },
+	"Geometry Passed": {
+            "constraint_equals": "True",
+            "display_level": 2
+        },
+	"Uniformity Passed": {
+            "constraint_equals": "True",
+            "display_level": 2
+        },
+	"HU Passed": {
+            "constraint_equals": "True",
+            "display_level": 2
+        },
+	"HU_Acrylic": {
+            "constraint_minlowhighmax": [
+                110.0,
+                115.0,
+                125.0,
+                130.0
+            ],
+            "description": " ",
+            "display_level": 2,
+            "display_name": "HU_Acrylic",
+            "units": ""
+        },
+	"HU_PMP": {
+            "constraint_minlowhighmax": [
+                -220.0,
+                -210.0,
+                -190.0,
+                -180.0
+            ],
+            "description": " ",
+            "display_level": 2,
+            "display_name": "HU_PMP",
+            "units": ""
+        },
+	"HU_Air": {
+            "constraint_minlowhighmax": [
+                -1100.0,
+                -1050.0,
+                -950.0,
+                -900.0
+            ],
+            "description": " ",
+            "display_level": 2,
+            "display_name": "HU_Air",
+            "units": ""
+        },
+	"HU_Teflon": {
+            "constraint_minlowhighmax": [
+                890.0,
+                940.0,
+                1045.0,
+                1090.0
+            ],
+            "description": " ",
+            "display_level": 2,
+            "display_name": "HU_Teflon",
+            "units": ""
+        },
+	"HU_LDPE": {
+            "constraint_minlowhighmax": [
+                -110.0,
+                -105.0,
+                -95.0,
+                -90.0
+            ],
+            "description": " ",
+            "display_level": 2,
+            "display_name": "HU_LDPE",
+            "units": ""
+        },
+	"HU_Poly": {
+            "constraint_minlowhighmax": [
+                -45.0,
+                -40.0,
+                -30.0,
+                -25.0
+            ],
+            "description": " ",
+            "display_level": 2,
+            "display_name": "HU_Poly",
+            "units": ""
+        },
+	"HU_Delrin": {
+            "constraint_minlowhighmax": [
+                310.0,
+                325.0,
+                355.0,
+                370.0
+            ],
+            "description": " ",
+            "display_level": 2,
+            "display_name": "HU_Delrin",
+            "units": ""
+        }
+
+    }
+}

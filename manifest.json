@@ -1,0 +1,28 @@
+{
+    "configs": {
+        "CONFIG-0": {
+            "datatype": "dcm_series",
+            "description": "Catphan 503",
+            "filename": "config_0_0.json",
+            "metafilename": "config_0_0.json",
+            "module": "MODULE-0",
+            "name": "CT_Catphan_503",
+            "origin": "user"
+        }
+    },
+    "info": {
+        "dbversion": "20180316",
+        "magic": "wad-qc-export"
+    },
+    "modules": {
+        "MODULE-0": {
+            "description": "Catphan 503",
+            "executable": "Catphan_wadwrapper.py",
+            "folder": "module_0",
+            "name": "CT_Catphan_503",
+            "origin": "user",
+            "repo_url": "",
+            "repo_version": ""
+        }
+    }
+}
