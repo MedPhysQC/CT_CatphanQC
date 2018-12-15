@@ -34,12 +34,14 @@ import sys,os
 
 try:
     import pydicom as dicom
+    from pydicom import tag
+
 except ImportError:
     import dicom
+    from dicom import tag
 
 
 import getopt
-from dicom import tag
 import numpy as np
 from numpy import random as rnd
 try:
