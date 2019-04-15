@@ -91,13 +91,13 @@ def Catphan_Analysis(data, results,actions):
         sys.exit()
     else:
         if version == "503":
-           tmpcat = pylinac.CatPhan503(dcmInfile,use_classifier=classifier)
+           tmpcat = pylinac.CatPhan503(dcmInfile)
         elif version == "504":
-           tmpcat = pylinac.CatPhan503(dcmInfile,use_classifier=classifier)
+           tmpcat = pylinac.CatPhan503(dcmInfile)
         elif version == "603":
-           tmpcat = pylinac.CatPhan503(dcmInfile,use_classifier=classifier)
+           tmpcat = pylinac.CatPhan503(dcmInfile)
         elif version == "604":
-           tmpcat = pylinac.CatPhan503(dcmInfile,use_classifier=classifier)
+           tmpcat = pylinac.CatPhan503(dcmInfile)
 
 
     tmpcat.analyze(hu_tolerance=hut)
