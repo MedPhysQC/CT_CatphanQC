@@ -4,6 +4,7 @@
         "creator": "generate_config_json.py version 20161110",
         "description": "CT Catphan"
     },
+    "metaformat":"20180910",
     "results": {
         "AcquisitionDateTime": {
             "constraint_period": 14,
