@@ -87,17 +87,18 @@ def Catphan_Analysis(data, results,actions):
     hut = int(params['hu_tolerance'])
 
     if not version in ["503","504","603","604"]:
-        print ('Sorry, Catphan version not supported! has to be 503,504,603 or 604')
+        print ('Sorry, Catphan version not supported! has to be 503,504,600 or 604')
         sys.exit()
     else:
         if version == "503":
            tmpcat = pylinac.CatPhan503(dcmInfile)
         elif version == "504":
-           tmpcat = pylinac.CatPhan503(dcmInfile)
-        elif version == "603":
-           tmpcat = pylinac.CatPhan503(dcmInfile)
+           tmpcat = pylinac.CatPhan504(dcmInfile)
+
+        elif version == "600":
+           tmpcat = pylinac.CatPhan600(dcmInfile)
         elif version == "604":
-           tmpcat = pylinac.CatPhan503(dcmInfile)
+           tmpcat = pylinac.CatPhan604(dcmInfile)
 
 
     tmpcat.analyze(hu_tolerance=hut)
