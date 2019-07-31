@@ -9,7 +9,8 @@
             "params": {
                 "classifier": "False",
                 "version": "503",
-                "hu_tolerance": "100"
+                "hu_tolerance": "100",
+                "add_boundary":"True"
             }
         }
     }, 

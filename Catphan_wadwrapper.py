@@ -70,15 +70,50 @@ import pylinac
 import os
 
 
+def _addBoundary(pathtodicom,enlargepixels=25):
+    'This routine manipulates the Catphan series by adding a number of background rows and columns to make the  detection of the phantom easier for pylinac'
+    flist = []
+    ew = enlargepixels
+    for root, subFolders, files in os.walk(pathtodicom):
+        for tfile in files:
+            tmpfile = os.path.join(root,tfile)
+            
+            tmpdcm =  dicom.read_file(tmpfile)
+        
+            tmparray = tmpdcm.pixel_array
+            arrshape = np.shape(tmparray)
+        
+            newarray = np.zeros((arrshape[0] + 2*ew,arrshape[1] + 2*ew))
+            newarray[ew:ew+arrshape[0],ew:ew+arrshape[1]] = tmparray
+
+            if newarray.dtype != np.uint16:
+                newarray = newarray.astype(np.uint16)
+                tmpdcm.PixelData = newarray.tostring()
+
+        
+            tag = 'Rows'
+            if tag in tmpdcm:
+                tmpdcm.data_element(tag).value  = arrshape[0]+2*ew
+
+            tag = 'Columns'
+            if tag in tmpdcm:
+                tmpdcm.data_element(tag).value  = arrshape[1]+2*ew
+
+        
+            tmpdcm.save_as(tmpfile)
+    return
+    
+
+
 def Catphan_Analysis(data, results,actions):
     dcmInfile = os.path.dirname(os.path.abspath(data.series_filelist[0][0]))
-
-    print(dcmInfile)
+    
     try:
         params = action['params']
     except:
         params = {}
 
+        
     version = params['version']
     if params['classifier'] == 'true':
        classifier = True
@@ -86,6 +121,11 @@ def Catphan_Analysis(data, results,actions):
        classifier = False
     hut = int(params['hu_tolerance'])
 
+    addboundary = params['add_boundary']
+    if addboundary == "True":
+        _addBoundary(dcmInfile)
+
+    
     if not version in ["503","504","603","604"]:
         print ('Sorry, Catphan version not supported! has to be 503,504,600 or 604')
         sys.exit()
