@@ -6,7 +6,7 @@
     "module": {
         "description": "CT Catphan",
         "executable": "Catphan_wadwrapper.py",
-        "name": "CT_Catphan",
+        "name": "CT_CatphanQC",
         "code": "python",
         "dependencies": [
             "pillow",
