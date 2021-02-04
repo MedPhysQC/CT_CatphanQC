@@ -139,7 +139,7 @@ def Catphan_Analysis(data, results,actions):
         _addBoundary(dcmInfile)
 
     
-    if not version in ["503","504","603","604"]:
+    if not version in ["503","504","600","604"]:
         print ('Sorry, Catphan version not supported! has to be 503,504,600 or 604')
         sys.exit()
     else:
@@ -147,7 +147,6 @@ def Catphan_Analysis(data, results,actions):
            tmpcat = pylinac.CatPhan503(dcmInfile)
         elif version == "504":
            tmpcat = pylinac.CatPhan504(dcmInfile)
-
         elif version == "600":
            tmpcat = pylinac.CatPhan600(dcmInfile)
         elif version == "604":
@@ -157,9 +156,9 @@ def Catphan_Analysis(data, results,actions):
     tmpcat.analyze(hu_tolerance=hut)
     #print (tmpcat.return_results())
     'HU Linearity ROI'
-    tmphu =  tmpcat.ctp404.hu_roi_vals
+    tmphu =  tmpcat.ctp404.rois
     for key in tmphu.keys():
-        results.addFloat('HU_'+key,float(tmphu[key]))
+        results.addFloat('HU_'+key,float(tmphu[key].pixel_value))
 
     
     results.addBool('HU Passed',bool(tmpcat.ctp404.passed_hu))
@@ -167,7 +166,7 @@ def Catphan_Analysis(data, results,actions):
     results.addFloat('Integral non-uniformity',float(tmpcat.ctp486.integral_non_uniformity))
     results.addBool('Uniformity Passed',bool(tmpcat.ctp486.overall_passed))
     results.addFloat('Low contrast visibility',tmpcat.ctp404.lcv)
-    results.addFloat('MTF 50 (lp/mm)', tmpcat.ctp528.mtf(50))
+    results.addFloat('MTF 50 (lp/mm)', tmpcat.ctp528.mtf.relative_resolution(50))
     results.addFloat('Geometric Line Average (mm)',tmpcat.ctp404.avg_line_length)
     results.addBool('Geometry Passed', bool(tmpcat.ctp404.passed_geometry))
     results.addFloat('Slice Thickness (mm)', tmpcat.ctp404.meas_slice_thickness)
