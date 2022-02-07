@@ -138,7 +138,7 @@ def Catphan_Analysis(data, results,actions):
     if addboundary == "True":
         _addBoundary(dcmInfile)
 
-    
+
     if not version in ["503","504","600","604"]:
         print ('Sorry, Catphan version not supported! has to be 503,504,600 or 604')
         sys.exit()
