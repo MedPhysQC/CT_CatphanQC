@@ -20,26 +20,24 @@
 # The WAD Software can be found on https://bitbucket.org/MedPhysNL/wadqc/wiki/Home
 #  
 #
+# pylinac has strong dependencies. 
+#   version 20250707 will run on Ubuntu22.04 (python 3.10) and Ubuntu24.04 (python 3.12) using pylinac==3.34.0
+#   version 20250707 will run on Ubuntu20.04 (python 3.8) you must use pylinac==3.20.0
+#
 # Changelog:
-#
+#  20250707 AS: for pylinac 3.34.0 fixed 'ValueError: The physical scan extent does not match the module configuration'; 
 #
 
-
-__version__='20181116'
+__version__='20250707'
 #__author__ = 'DD, tdw'
 
-
-
 import sys,os
-
 try:
     import pydicom as dicom
     from pydicom import tag
-
 except ImportError:
     import dicom
     from dicom import tag
-
 
 import getopt
 import numpy as np
@@ -61,8 +59,6 @@ except ImportError:
 
 from wad_qc.modulelibs import wadwrapper_lib
 
-
-
 if not 'MPLCONFIGDIR' in os.environ:
     try:
         # new method
@@ -83,14 +79,45 @@ if not 'MPLCONFIGDIR' in os.environ:
 import matplotlib
 matplotlib.use('Agg') # Force matplotlib to not use any Xwindows backend.
 
-
-
-
-import pylinac
+from pylinac import (
+    CatPhan503,
+    CatPhan504,
+    CatPhan600,
+    CatPhan604,
+)
 import os
 
+### [start] fixes 20250707
+from types import MethodType
+"""
+override catphanbase.localize; 
+  pylinac wants a specific z-range as part of localize, which we cannot guarantee; 
+  we fix it by not running self._ensure_physical_scan_extent()
+"""
+def _ensure_physical_scan_extent(sself) -> bool:
+    return True
 
-def _addBoundary(pathtodicom,enlargepixels=25):
+
+# here add boundary
+def _addBoundary(ctscan, enlargepixels=25):
+    """ 
+    This routine manipulates the Catphan series by adding a number of background 
+    rows and columns to make the detection of the phantom easier for pylinac.
+    20250707: do this on the loaded data, not on the dicom images and use -1024 instead of 0
+    """
+    ew = enlargepixels
+    
+    for idx, img in enumerate(ctscan.dicom_stack):
+        arrshape = np.shape(img.array)
+        newarray = np.zeros((arrshape[0] + 2*ew,arrshape[1] + 2*ew),dtype=img.array.dtype)-1024
+        newarray[ew:ew+arrshape[0],ew:ew+arrshape[1]] = img.array
+        ctscan.dicom_stack[idx].array = newarray
+    return ctscan
+
+### [end] fixes 20250707
+
+"""
+def _addBoundary_unused(pathtodicom,enlargepixels=25):
     'This routine manipulates the Catphan series by adding a number of background rows and columns to make the  detection of the phantom easier for pylinac'
     flist = []
     ew = enlargepixels
@@ -122,7 +149,7 @@ def _addBoundary(pathtodicom,enlargepixels=25):
         
             tmpdcm.save_as(tmpfile)
     return
-    
+"""    
 
 
 def Catphan_Analysis(data, results,actions):
@@ -136,31 +163,39 @@ def Catphan_Analysis(data, results,actions):
         
     version = params['version']
     if params['classifier'] == 'true':
-       classifier = True
+        classifier = True
     else:
-       classifier = False
+        classifier = False
     hut = int(params['hu_tolerance'])
 
     addboundary = params['add_boundary']
+    
+    # version before 20250707
+    """
     if addboundary == "True":
         _addBoundary(dcmInfile)
-
+    """
 
     if not version in ["503","504","600","604"]:
         print ('Sorry, Catphan version not supported! has to be 503,504,600 or 604')
         sys.exit()
     else:
         if version == "503":
-           tmpcat = pylinac.CatPhan503(dcmInfile)
+            tmpcat = CatPhan503(dcmInfile)
         elif version == "504":
-           tmpcat = pylinac.CatPhan504(dcmInfile)
+            tmpcat = CatPhan504(dcmInfile)
         elif version == "600":
-           tmpcat = pylinac.CatPhan600(dcmInfile)
+            tmpcat = CatPhan600(dcmInfile)
         elif version == "604":
-           tmpcat = pylinac.CatPhan604(dcmInfile)
+            tmpcat = CatPhan604(dcmInfile)
 
-
+    # version 20250707
+    tmpcat._ensure_physical_scan_extent = MethodType(_ensure_physical_scan_extent, tmpcat)
+    if addboundary == "True":
+        tmpcat = _addBoundary(tmpcat)
+        
     tmpcat.analyze(hu_tolerance=hut)
+    
     #print (tmpcat.return_results())
     'HU Linearity ROI'
     tmphu =  tmpcat.ctp404.rois
